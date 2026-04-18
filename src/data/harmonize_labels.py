@@ -9,6 +9,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
+import cv2
+
 try:
     from tqdm import tqdm
 except ImportError:
@@ -329,18 +331,74 @@ def process_indian_vehicle_license_plate_dataset(stats: Stats, seen: Dict[str, i
     )
 
 
-def process_indian_license_plates(stats: Stats) -> None:
-    # This source is mostly image-only crops and not detection-ready labels.
+def process_indian_license_plates(stats: Stats, seen: Dict[str, int]) -> None:
     root = RAW_DIR / "indian_license_plates"
     if not root.exists():
         return
-    image_count = len(
-        [
-            p for p in root.rglob("*")
-            if p.is_file() and not is_artifact(p) and p.suffix.lower() in IMG_EXTS
-        ]
-    )
-    stats.skipped_unlabeled += image_count
+
+    all_images = [
+        p for p in root.rglob("*")
+        if p.is_file() and not is_artifact(p) and p.suffix.lower() in IMG_EXTS
+    ]
+    ingested_images: set[str] = set()
+
+    # positive.txt has crop-local boxes that can be converted to YOLO format.
+    positive_dir = root / "Indian Plates" / "positive"
+    positive_txt = positive_dir / "positive.txt"
+    if positive_txt.exists():
+        with positive_txt.open("r", encoding="utf-8", errors="ignore") as f:
+            for line in tqdm(f, desc="indian_license_plates:positive"):
+                parts = line.strip().split()
+                if len(parts) < 6:
+                    stats.skipped_invalid_label += 1
+                    continue
+
+                image_name = parts[0]
+                image_path = positive_dir / image_name
+                if not image_path.exists() or is_artifact(image_path):
+                    stats.skipped_missing_image += 1
+                    continue
+
+                try:
+                    x = float(parts[2])
+                    y = float(parts[3])
+                    w = float(parts[4])
+                    h = float(parts[5])
+                except ValueError:
+                    stats.skipped_invalid_label += 1
+                    continue
+
+                img = cv2.imread(str(image_path))
+                if img is None:
+                    stats.skipped_missing_image += 1
+                    continue
+
+                img_h, img_w = img.shape[:2]
+                x1 = clamp(x, 0.0, float(img_w))
+                y1 = clamp(y, 0.0, float(img_h))
+                x2 = clamp(x + w, 0.0, float(img_w))
+                y2 = clamp(y + h, 0.0, float(img_h))
+                bw = x2 - x1
+                bh = y2 - y1
+                if bw <= 1.0 or bh <= 1.0:
+                    stats.skipped_invalid_label += 1
+                    continue
+
+                x_center = ((x1 + x2) / 2.0) / float(img_w)
+                y_center = ((y1 + y2) / 2.0) / float(img_h)
+                yolo = f"0 {x_center:.6f} {y_center:.6f} {bw / img_w:.6f} {bh / img_h:.6f}"
+                final_name = write_sample(
+                    image_path,
+                    [yolo],
+                    "indian_license_plates",
+                    image_path.stem,
+                    seen,
+                    stats,
+                )
+                if final_name:
+                    ingested_images.add(image_name)
+
+    stats.skipped_unlabeled += max(0, len(all_images) - len(ingested_images))
 
 
 def save_reports(stats: Stats, ocr_rows: List[Dict[str, str]]) -> None:
@@ -384,7 +442,7 @@ def harmonize_license_detection_datasets() -> None:
     process_indian_licence_plates_with_labels(stats, seen)
     process_indian_plates(stats, seen, ocr_rows)
     process_indian_vehicle_license_plate_dataset(stats, seen)
-    process_indian_license_plates(stats)
+    process_indian_license_plates(stats, seen)
 
     save_reports(stats, ocr_rows)
     print("License dataset harmonization complete.")
