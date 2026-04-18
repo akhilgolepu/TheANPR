@@ -1,0 +1,5 @@
+path: /home/akhil/TheANPR/data/processed/plate_dataset
+train: images/train
+val: images/val
+nc: 1
+names: [license_plate]

@@ -1,0 +1,22 @@
+# --- Python Housekeeping ---
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+env/
+build/
+dist/
+
+# --- IDE & OS ---
+.vscode/
+.DS_Store
+.idea/
+
+# --- Project Specifics ---
+# We ignore the messy 'runs' folder but keep the reports
+runs/detect/
+!reports/
+
+# Ignore base weights since we moved them to models/
+yolo11m.pt
+yolo26n.pt

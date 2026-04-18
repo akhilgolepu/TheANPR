@@ -1,0 +1,12 @@
+{
+    "timestamp": "2026-04-18 17:26:50",
+    "model_path": "/home/akhil/TheANPR/runs/detect/runs/detect/plate_detector_v1_optimized2/weights/best.pt",
+    "metrics": {
+        "mAP50": 0.9947167467783646,
+        "mAP50-95": 0.8387170779253464,
+        "latency_ms": 16.18525345802307,
+        "fps": 61.78463640334885,
+        "precision": 0.9895916254062562,
+        "recall": 0.9950917347513156
+    }
+}

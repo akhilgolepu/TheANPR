@@ -1,0 +1,14 @@
+artifact_uri: /home/akhil/TheANPR/runs/mlflow/995174765676162975/29b639deb9754543aed666404863ec24/artifacts
+end_time: null
+entry_point_name: ''
+experiment_id: '995174765676162975'
+lifecycle_stage: active
+run_id: 29b639deb9754543aed666404863ec24
+run_name: plate_detector_v1_optimized2
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1776509016823
+status: 1
+tags: []
+user_id: akhil
