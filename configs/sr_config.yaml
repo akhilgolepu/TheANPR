@@ -1,0 +1,32 @@
+#paths:
+# hr_data: "data/raw/DIV2K/DIV2K_train_HR/DIV2K_train_HR"
+#  lr_data: "data/processed/sr_dataset/train_LR"
+
+paths:
+  hr_data: "data/raw/hr_plates"
+  lr_data: "data/processed/sr_plates_dataset/train_LR"
+
+params:
+  scale_factor: 4
+  blur_kernel: 5
+  noise_sigma: 10
+
+training:
+  epochs: 50
+  batch_size: 16
+  learning_rate: 0.0001
+  num_workers: 4
+  save_dir: models/checkpoints/sr_models
+
+gan_training:
+  epochs: 10 
+  batch_size: 4 
+  lr_generator: 0.00001
+  lr_discriminator: 0.00001
+  
+
+  lambda_pixel: 0.01
+  lambda_perceptual: 1.0
+  lambda_adv: 0.005 
+  
+  save_dir: "models/checkpoints/finetuned_esrgan"
