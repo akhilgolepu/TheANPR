@@ -19,4 +19,6 @@ runs/detect/
 
 # Ignore base weights since we moved them to models/
 yolo11m.pt
-yolo26n.pt
+yolo26n.ptwebsite/node_modules/
+website/dist/
+website/.env
