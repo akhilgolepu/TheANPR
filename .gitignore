@@ -29,3 +29,10 @@ Thumbs.db
 website/dist/
 website/.cache/
 website/.vite/
+*.db-journal
+*.db-wal
+Thumbs.db
+.DS_Store
+website/dist/
+website/.cache/
+website/.vite/
