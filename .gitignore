@@ -1,4 +1,3 @@
-# --- Python Housekeeping ---
 __pycache__/
 *.py[cod]
 *$py.class
@@ -7,32 +6,38 @@ env/
 build/
 dist/
 
-# --- IDE & OS ---
 .vscode/
 .DS_Store
 .idea/
 
-# --- Project Specifics ---
-# We ignore the messy 'runs' folder but keep the reports
 runs/detect/
 !reports/
 
-# Ignore base weights since we moved them to models/
 yolo11m.pt
-yolo26n.ptwebsite/node_modules/
-website/dist/
-website/.env
+yolo26n.ptfrontend/node_modules/
+frontend/dist/
+frontend/.env
 *.db-journal
 *.db-wal
 Thumbs.db
 .DS_Store
-website/dist/
-website/.cache/
-website/.vite/
+frontend/dist/
+frontend/.cache/
+frontend/.vite/
 *.db-journal
 *.db-wal
 Thumbs.db
 .DS_Store
-website/dist/
-website/.cache/
-website/.vite/
+frontend/dist/
+frontend/.cache/
+frontend/.vite/
+
+enhanced_img_020.png
+.gitignore
+enhanced_img_013.png
+.agents/workflows/graphify.md
+.gitignore
+PROJECT_IN_DETAIL.md
+ANPR_Research_Paper_Draft.md
+
+research paper

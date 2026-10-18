@@ -1,0 +1,56 @@
+# Frontend Dockerfile
+# Multi-stage build: compile React app with Vite, then serve with Nginx
+
+# Build stage
+FROM node:18-alpine AS builder
+
+WORKDIR /app
+
+# Copy package files
+COPY frontend/package.json frontend/package-lock.json ./
+
+# Install dependencies
+RUN npm ci
+
+# Copy source code
+COPY frontend .
+
+# Build the production bundle
+RUN npm run build
+
+# Production stage
+FROM nginx:alpine
+
+# Copy custom Nginx config
+COPY <<EOF /etc/nginx/conf.d/default.conf
+server {
+    listen 80;
+    server_name _;
+    root /usr/share/nginx/html;
+    index index.html;
+    
+    # Cache static assets for 1 year
+    location ~* \\.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$ {
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+    }
+    
+    # Always serve index.html for React Router
+    location / {
+        try_files \$uri \$uri/ /index.html;
+    }
+}
+EOF
+
+# Copy built app from builder
+COPY --from=builder /app/dist /usr/share/nginx/html
+
+# Expose port
+EXPOSE 80
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
+    CMD wget --quiet --tries=1 --spider http://localhost/ || exit 1
+
+# Run Nginx
+CMD ["nginx", "-g", "daemon off;"]

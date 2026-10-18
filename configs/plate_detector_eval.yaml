@@ -1,14 +1,14 @@
 model:
-  path: "/home/akhil/TheANPR/runs/detect/runs/detect/plate_detector_v1_optimized2/weights/best.pt"
+  path: "/home/akhil/TheANPR/models/checkpoints/plate_detector_v1.pt"
   img_size: 640
   conf_threshold: 0.5
 
 targets:
   min_map50: 0.85
-  max_latency: 20.0
+  max_latency_ms: 20.0
   max_vram_gb: 4.0
 
 paths:
   test_data: "/home/akhil/TheANPR/configs/plate_detection.yaml"
-  inference_samples: "/home/akhil/TheANPR/data/processed/plate_dataset/images/val"
-  report_output: "/home/akhil/TheANPR/reports/plate_detector_eval_report.json"
+  inference_samples: "/home/akhil/TheANPR/data/processed/detection/images"
+  report_output: "reports/plate_detector_report.json"

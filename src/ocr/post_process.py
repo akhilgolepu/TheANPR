@@ -1,4 +1,8 @@
 import re
+import difflib
+import logging
+
+logger = logging.getLogger(__name__)
 
 # Standard list of Indian State Codes
 VALID_STATES = {
@@ -32,6 +36,8 @@ def correct_indian_plate(raw_text: str) -> str:
     Applies heuristics to correct common OCR errors based on Indian plate formats.
     Standard Format: SS DD LL NNNN (e.g., MH 12 AB 1234)
     Variants: SS DD L NNNN (e.g., DL 8 C 1234)
+    
+    If state code is invalid, attempts fuzzy matching to correct it.
     """
     text = clean_raw_text(raw_text)
     
@@ -59,11 +65,23 @@ def correct_indian_plate(raw_text: str) -> str:
 
     final_plate = "".join(corrected)
     
-    # 5. Final Sanity Check against Valid States
+    # 5. Final Sanity Check against Valid States with Fuzzy Correction
     state_code = final_plate[:2]
     if state_code not in VALID_STATES:
-        # We could add fuzzy matching here, but for now we just flag it
-        pass 
+        # Try fuzzy matching to correct invalid state codes
+        match = difflib.get_close_matches(
+            state_code,
+            sorted(VALID_STATES),
+            n=1,
+            cutoff=0.5,
+        )
+        if match:
+            logger.info(
+                "Auto-corrected state code from %s to %s",
+                state_code,
+                match[0],
+            )
+            final_plate = match[0] + final_plate[2:]
 
     return final_plate
 

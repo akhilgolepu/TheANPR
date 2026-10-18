@@ -1,0 +1,25 @@
+# Ignore heavy MLOps data layers
+data/
+models/
+runs/
+notebooks/
+reports/
+
+# Ignore local version control and tracking cores
+.git/
+.dvc/
+.dvcignore
+*.dvc
+mlflow.db
+
+# Ignore frontend source and heavy node binaries
+frontend/node_modules/
+frontend/dist/
+
+# Ignore temporary environment artifacts
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.env
+.pytest_cache/
