@@ -327,23 +327,6 @@ PYTHONUNBUFFERED=1                        # Real-time logging
 - `configs/plate_detector_eval.yaml` - Evaluation targets (mAP, latency, VRAM)
 - `configs/plate_detection.yaml` - YOLO training dataset metadata
 
-## 🤝 Contributing
-
-1. Create a feature branch: `git checkout -b feature/description`
-2. Make changes and run tests: `pytest tests/ && npm -C frontend test`
-3. Ensure linting passes: `flake8 src/ && npm -C frontend run lint`
-4. Push and open a PR against `main`
-
-## 📚 References
-
-- [YOLOv8 Documentation](https://docs.ultralytics.com/)
-- [EasyOCR Github](https://github.com/JaidedAI/EasyOCR)
-- [FastAPI Documentation](https://fastapi.tiangolo.com/)
-- [React Documentation](https://react.dev/)
-
-## 📄 License
-
-MIT License - See LICENSE file for details
 
 ## 👥 Team
 
@@ -358,4 +341,3 @@ Built as a demonstration of modern ML ops practices including:
 
 **Last Updated**: 2026-05-11  
 **Status**: Production Ready (with noted limitations)  
-**Maintained by**: TheANPR Development Team
